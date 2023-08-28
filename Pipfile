@@ -4,17 +4,17 @@ verify_ssl = true
 name = "pypi"
 
 [packages]
-sqlalchemy = "*"
-mysql-connector-python = "*"
 fastapi = "*"
-pydantic = "*"
+uvicorn = "*"
+sqlalchemy = "*"
+python-dotenv = "*"
+mysqlclient = "*"
 pymysql = "*"
-uvicorn = {extras = ["standard"], version = "*"}
 
 [dev-packages]
 
 [requires]
-python_version = "3.8"
+python_version = "3.11"
 
 [scripts]
 server = "uvicorn app:app --reload"

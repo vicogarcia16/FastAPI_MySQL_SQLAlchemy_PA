@@ -11,13 +11,11 @@ class ProductAdd(BaseModel):
     price: float
     
     class Config:
-        orm_mode = True
+        from_attributes = True
     
 class ProductUpdate(BaseModel):
     product: str
     price: float
     
     class Config:
-        orm_mode = True
-    
-    
+        from_attributes = True

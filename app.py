@@ -1,4 +1,5 @@
 from fastapi import Depends, FastAPI,HTTPException
+from fastapi.responses import JSONResponse
 from config.db import SessionLocal
 from schemas import schema
 from sqlalchemy.orm import Session
@@ -26,9 +27,16 @@ def get_db():
     finally:
         db.close()
         
+@app.exception_handler(HTTPException)
+async def http_exception_handler(request, exc):
+    return JSONResponse(
+        status_code=exc.status_code,
+        content={"error": exc.detail},
+    )
+        
 @app.post("/products/", tags=["Productos"])
 def create_product(product: schema.ProductAdd, db: Session = Depends(get_db)):
-    product_data = product.dict()
+    product_data = product.model_dump()
     try:    
         created_product_id = create_product_sp(product_data["product"], product_data["price"], db)
         return {"message": "Product created","product_id": created_product_id}
@@ -85,7 +93,6 @@ def delete_product(product_id: int, db: Session = Depends(get_db)):
     try:
         get_product_sp(product_id, db)
         deleted = delete_product_sp(product_id, db)
-        print(deleted)
         if deleted:
             return {"message": "Product successfully deleted"}
     except Exception as e:
